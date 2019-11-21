@@ -1,0 +1,32 @@
+.side-nav {
+
+    width: 13%;
+    height: 85vh;
+    z-index: 1;
+    padding-top: 7rem;
+    border-right: 2px solid #eeeeee;
+
+    &__option {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        position:relative;
+        padding: .5rem 0;
+        color: #0D1A26;
+        
+        
+
+        &-text {
+            font-size: .85rem;
+            font-weight: 400;
+            text-decoration: none;
+            margin: 0 0 0 2rem;
+            color: inherit;
+        }
+    }
+}
+
+.active {
+    background-color: #1890FF;
+    color: #ffffff;
+}

@@ -1,0 +1,64 @@
+.header {
+    position: fixed;
+    height: 3.3rem;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    background-color: #ffffff;
+    box-shadow: 0 .5rem 1rem rgba($color: #eeeeee, $alpha: .8);
+    z-index: 3;
+
+    &__logo {
+        width: 13%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &--text-1 {
+            font-size: 1.5rem;
+            color: #1890FF;
+        }
+
+        &--text-2 {
+            font-size: 1rem;
+            color: #1890FF;
+            margin-left: .5rem;
+        }
+    }
+
+   
+
+    &__navigation {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 0 2rem 0 auto;
+
+        &--notification {
+            font-size: 1rem;
+            color: #1890FF;
+            margin-right: 1rem;
+        }
+
+        &--avatar {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            
+
+            &-name {
+                font-size: .9rem;
+                color: #1890FF;
+                font-weight: 400;
+                margin-right: .5rem;
+            }
+
+            &-img {
+                height: 1.5rem;
+                width: 1.5rem;
+                border-radius: 50%;
+                overflow: hidden;
+            }
+        }
+    }
+}

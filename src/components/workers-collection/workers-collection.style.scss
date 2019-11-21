@@ -1,0 +1,70 @@
+.workers-collection {
+    width: 90%;
+    background-color: #ffffff;
+
+    border-radius: 5px;
+    border: 1px solid #e3e6f0;
+    box-shadow: 0 3rem 4rem rgba($color:#000, $alpha: .1);
+    margin: 0 auto;
+    height: 80vh;
+    overflow: hidden;
+
+    &__title {
+        height: 3rem;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1890FF;
+        background-color: #f8f9fc;
+        border-bottom: 1px solid #e3e6f0;
+        display: flex;
+        align-items: center;
+        padding-left: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    &__entry-table {
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        margin: 0 auto;
+
+        &--header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between; 
+            font-size: .8rem;
+            font-weight: 700;  
+            color: #7c7d83; 
+        }
+    }
+}
+.table--cell {
+    padding: .75rem;
+    border: 1px solid #e3e6f0;
+}
+.table--heading {
+    padding: .75rem;
+    border-top: 2px solid #e3e6f0; 
+    border-bottom: 2px solid #e3e6f0 ;
+    border-right: 1px solid #e3e6f0;
+    border-left: 1px solid #e3e6f0;
+}
+
+.table__cell-1 {
+    width: 20%;
+}
+.table__cell-2 {
+    width: 20%;
+}
+.table__cell-3 {
+    width: 20%;
+}
+.table__cell-4 {
+    width: 5%;
+}
+.table__cell-5 {
+    width: 10%;
+}
+.table__cell-6 {
+    width: 15%;
+}

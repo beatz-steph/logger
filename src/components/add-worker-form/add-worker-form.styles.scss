@@ -1,0 +1,53 @@
+
+.worker-form {
+    width: 40%;
+    margin: 6rem 0 0 10rem ;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 0 3rem 4rem rgba($color:#000, $alpha: .1);
+    overflow: hidden;
+    border: 1px solid #e3e6f0;
+
+    &__title {
+        height: 3rem;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1890FF;
+        background-color: #f8f9fc;
+        width: 100%;
+        border-bottom: 1px solid #e3e6f0;
+        display: flex;
+        align-items: center;
+        padding-left: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    &__input{
+        display: flex;
+        flex-direction: row;
+        margin: .5rem 0;
+        width: 30rem;
+
+        &--label{
+            width: 30%;
+            font-size: .7rem;
+        }
+
+        &--field{
+            border: 1px solid #c7c7c7;
+            width: 70%;
+            height: 2rem;
+            border-radius: 3px;
+            margin-left: auto;
+            padding-left: 1rem;
+            box-sizing: border-box;
+        }
+
+
+    }
+}
+

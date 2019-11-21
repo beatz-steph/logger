@@ -1,25 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+
+import Landing from "./pages/landing/landing.component";
+import SignInSignUp from "./pages/sign-in-sign-up/sign-in-sign-up.component";
+
+import { auth, createUserProfileDocument } from "./firebase/firebase";
+
+import "./app.scss";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    let unsubscribeFromAuth = null;
+
+    unsubscribeFromAuth = auth.onAuthStateChanged(userAuth => {
+      const userdata = createUserProfileDocument(userAuth);
+
+      setUser(userdata);
+    });
+    return () => {
+      unsubscribeFromAuth();
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div></div>
+      <Switch>
+        <Route exact path="/">
+          {user ? <Redirect to="/Dashboard" /> : <Redirect to="/login" />}
+        </Route>
+        <Route path="/login">
+          <SignInSignUp user={user} />
+        </Route>
+        <Route path="/Dashboard">
+          {user ? <Landing /> : <Redirect to="/login" />}
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
