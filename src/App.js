@@ -12,8 +12,6 @@ import {
   selectUserCurrentUser
 } from "./redux/user/user.selector";
 
-import WithLoader from "./components/with-loader/with-loader.component";
-
 import "./app.scss";
 import { Switch, Route, Redirect } from "react-router-dom";
 
@@ -24,16 +22,21 @@ function App({ checkUserSession, currentUser, isFetching }) {
 
   return (
     <div>
-      <WithLoader isFetching={isFetching} currentUser={currentUser} />
       <Switch>
         <Route exact path="/">
-          <Loader loader />;
+          {isFetching ? (
+            <Loader loader />
+          ) : null && currentUser ? (
+            <Redirect to="/dashboard" />
+          ) : (
+            <Redirect to="/signin" />
+          )}
         </Route>
         <Route path="/dashboard">
-          <Landing />;
+          {!currentUser ? <Redirect to="/signin" /> : <Landing />}
         </Route>
         <Route path="/signin">
-          <SignInSignUp />;
+          {currentUser ? <Redirect to="/dashboard" /> : <SignInSignUp />}
         </Route>
       </Switch>
     </div>
