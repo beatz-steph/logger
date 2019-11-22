@@ -25,6 +25,15 @@ googleProvider.setCustomParameters({ prompt: "select_account" });
 export const SignInWithGoogle = () => auth.signInWithPopup(googleProvider);
 export const signOut = () => auth.signOut();
 
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribeFromAuth = auth.onAuthStateChanged(userAuth => {
+      resolve(userAuth);
+      unsubscribeFromAuth();
+    }, reject);
+  });
+};
+
 export const createUserProfileDocument = async (user, additionalData) => {
   if (!user) {
     return;
@@ -48,6 +57,7 @@ export const createUserProfileDocument = async (user, additionalData) => {
       console.log("error creating user", error);
     }
   }
+
   console.log("existx");
   getUserDocument(user.uid);
 };

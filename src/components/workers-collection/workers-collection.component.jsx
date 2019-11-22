@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { firestore, auth } from "../../firebase/firebase";
+import { firestore } from "../../firebase/firebase";
+
+import { connect } from "react-redux";
 
 import { collectedWorkerDetails } from "../../utilities";
 
@@ -7,8 +9,8 @@ import WorkerEntry from "../worker-entry/worker-entry.component";
 
 import "./workers-collection.style.scss";
 
-const WorkersCollection = () => {
-  const uid = auth.currentUser.uid || null;
+const WorkersCollection = ({ currentUser }) => {
+  const uid = currentUser.uid || null;
   const [workers, setWorkers] = useState([]);
 
   useEffect(() => {
@@ -43,10 +45,13 @@ const WorkersCollection = () => {
           <WorkerEntry key={work.id} work={work} />
         ))}
       </div>
-
       <div className="workers-collection__footer"></div>
     </div>
   );
 };
 
-export default WorkersCollection;
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser
+});
+
+export default connect(mapStateToProps)(WorkersCollection);

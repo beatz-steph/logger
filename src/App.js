@@ -1,50 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import Landing from "./pages/landing/landing.component";
+import { createStructuredSelector } from "reselect";
 import SignInSignUp from "./pages/sign-in-sign-up/sign-in-sign-up.component";
+import Loader from "./components/loader/loader.component";
 
-import { auth, createUserProfileDocument } from "./firebase/firebase";
+import { connect } from "react-redux";
+import { checkUserSession } from "./redux/user/user.actions";
+import {
+  selectIsFetchingUser,
+  selectUserCurrentUser
+} from "./redux/user/user.selector";
+
+import WithLoader from "./components/with-loader/with-loader.component";
 
 import "./app.scss";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
-function App() {
-  const [user, setUser] = useState(null);
-
+function App({ checkUserSession, currentUser, isFetching }) {
   useEffect(() => {
-    let unsubscribeFromAuth = null;
-
-    unsubscribeFromAuth = auth.onAuthStateChanged(userAuth => {
-      const userdata = createUserProfileDocument(userAuth);
-
-      setUser(userdata);
-    });
-    return () => {
-      unsubscribeFromAuth();
-    };
+    checkUserSession();
   }, []);
 
   return (
-    <Router>
-      <div></div>
+    <div>
+      <WithLoader isFetching={isFetching} currentUser={currentUser} />
       <Switch>
         <Route exact path="/">
-          {user ? <Redirect to="/Dashboard" /> : <Redirect to="/login" />}
+          <Loader loader />;
         </Route>
-        <Route path="/login">
-          <SignInSignUp user={user} />
+        <Route path="/dashboard">
+          <Landing />;
         </Route>
-        <Route path="/Dashboard">
-          {user ? <Landing /> : <Redirect to="/login" />}
+        <Route path="/signin">
+          <SignInSignUp />;
         </Route>
       </Switch>
-    </Router>
+    </div>
   );
 }
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+  checkUserSession: () => dispatch(checkUserSession())
+});
+
+const mapStateToprops = createStructuredSelector({
+  currentUser: selectUserCurrentUser,
+  isFetching: selectIsFetchingUser
+});
+
+export default connect(mapStateToprops, mapDispatchToProps)(App);

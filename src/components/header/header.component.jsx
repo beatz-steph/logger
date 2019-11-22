@@ -1,12 +1,12 @@
 import React from "react";
 import SearchBar from "../search-bar/search-bar.component";
 
-import { auth } from "../../firebase/firebase";
+import { connect } from "react-redux";
+
 import "./header.styles.scss";
 
-const Header = () => {
-  const { displayName, photoURL } = auth.currentUser || null;
-
+const Header = currentUser => {
+  const { displayName } = currentUser;
   return (
     <div className="header">
       <div className="header__logo">
@@ -20,15 +20,15 @@ const Header = () => {
         </div>
         <div className="header__navigation--avatar">
           <span className="header__navigation--avatar-name">{displayName}</span>
-          <img
-            className="header__navigation--avatar-img"
-            src={photoURL}
-            alt="avatar"
-          />
+          <img className="header__navigation--avatar-img" alt="avatar" />
         </div>
       </div>
     </div>
   );
 };
 
-export default Header;
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser
+});
+
+export default connect(mapStateToProps)(Header);
