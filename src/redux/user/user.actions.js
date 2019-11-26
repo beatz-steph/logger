@@ -30,7 +30,7 @@ export const signUpSuccess = (user, additionalData) => ({
 });
 
 export const signUpFailure = error => ({
-  type: userActionTypes.SIGN_IN_FAILURE,
+  type: userActionTypes.SIGN_UP_FAILURE,
   payload: error.message
 });
 

@@ -4,14 +4,17 @@ import {
   getCurrentUser,
   SignInWithGoogle,
   getUserDocument,
-  signOut,
-  createUserProfileDocument
+  createUserProfileDocument,
+  signInWithEmail,
+  signUp,
+  auth
 } from "../../firebase/firebase";
 import {
   signInFailure,
   signInSucces,
   signOutFailure,
-  signOutSuccess
+  signOutSuccess,
+  signUpFailure
 } from "./user.actions";
 
 export function* CheckUserSession() {
@@ -57,12 +60,45 @@ export function* ValidSignInStart(userAuth, additionalData) {
   }
 }
 
+export function* finishSignOut() {
+  yield put(signOutSuccess());
+}
+
 export function* StartSignOut() {
   try {
-    yield call(signOut);
-    yield put(signOutSuccess);
+    yield auth.signOut();
+    yield finishSignOut();
   } catch (error) {
     yield put(signOutFailure(error));
+  }
+}
+
+export function* EmailSignInStart({ payload: { email, password } }) {
+  try {
+    const userAuth = yield call(signInWithEmail, email, password);
+    yield call(ValidSignInStart, userAuth);
+  } catch (error) {
+    yield put(signInFailure(error));
+  }
+}
+
+export function* SignUpStart({
+  payload: { email, password, firstname, surname }
+}) {
+  try {
+    const userAuth = yield call(signUp, email, password);
+    if (userAuth === null) {
+      yield put(signUpFailure({ message: "couldnt create user" }));
+      return;
+    }
+
+    const GottenUser = userAuth.user;
+
+    yield call(ValidSignInStart, GottenUser, {
+      displayName: `${firstname} ${surname}`
+    });
+  } catch (error) {
+    yield put(signUpFailure(error));
   }
 }
 
@@ -78,10 +114,20 @@ export function* onSignOutStart() {
   yield takeLatest(userActionTypes.SIGN_OUT_START, StartSignOut);
 }
 
+export function* onEmailSignInStart() {
+  yield takeLatest(userActionTypes.EMAIL_SIGN_IN_START, EmailSignInStart);
+}
+
+export function* onSignUpStart() {
+  yield takeLatest(userActionTypes.SIGN_UP_START, SignUpStart);
+}
+
 export function* userSaga() {
   yield all([
     call(onCheckUerSession),
     call(onGoogleSignInStart),
-    call(onSignOutStart)
+    call(onSignOutStart),
+    call(onEmailSignInStart),
+    call(onSignUpStart)
   ]);
 }

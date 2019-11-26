@@ -2,10 +2,12 @@ import React from "react";
 import SearchBar from "../search-bar/search-bar.component";
 
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { selectUserCurrentUser } from "../../redux/user/user.selector";
 
 import "./header.styles.scss";
 
-const Header = currentUser => {
+const Header = ({ currentUser }) => {
   const { displayName } = currentUser;
   return (
     <div className="header">
@@ -27,8 +29,8 @@ const Header = currentUser => {
   );
 };
 
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectUserCurrentUser
 });
 
 export default connect(mapStateToProps)(Header);

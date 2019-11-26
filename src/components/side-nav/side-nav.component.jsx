@@ -21,10 +21,8 @@ const SideNav = ({ url, dispatch }) => (
     </li>
     <li className="side-nav__option">
       <Link
-        onClick={() => {
-          dispatch(signOutStart());
-        }}
-        to={"/login"}
+        to="/"
+        onClick={() => dispatch(signOutStart())}
         className="side-nav__option-text"
       >
         Log out

@@ -25,6 +25,16 @@ googleProvider.setCustomParameters({ prompt: "select_account" });
 export const SignInWithGoogle = () => auth.signInWithPopup(googleProvider);
 export const signOut = () => auth.signOut();
 
+export const signInWithEmail = async (email, password) => {
+  const userAuth = await auth.signInWithEmailAndPassword(email, password);
+  return userAuth;
+};
+
+export const signUp = async (email, password) => {
+  const userAuth = await auth.createUserWithEmailAndPassword(email, password);
+  return userAuth;
+};
+
 export const getCurrentUser = () => {
   return new Promise((resolve, reject) => {
     const unsubscribeFromAuth = auth.onAuthStateChanged(userAuth => {
@@ -51,14 +61,9 @@ export const createUserProfileDocument = async (user, additionalData) => {
         email,
         ...additionalData
       });
-
-      console.log("dose not exist");
-    } catch (error) {
-      console.log("error creating user", error);
-    }
+    } catch (error) {}
   }
 
-  console.log("existx");
   getUserDocument(user.uid);
 };
 
@@ -73,11 +78,9 @@ export const getUserDocument = async uid => {
       .doc(uid)
       .get();
 
-    console.log(userDocument.data());
-
     return { uid, ...userDocument.data() };
   } catch (error) {
-    console.log("error getting user", error);
+    console.log(error);
   }
 };
 

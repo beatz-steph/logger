@@ -1,32 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { firestore } from "../../firebase/firebase";
+import React, { useEffect } from "react";
 
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
-import { collectedWorkerDetails } from "../../utilities";
+import { selectUserCurrentUser } from "../../redux/user/user.selector";
+import { selectWorkers } from "../../redux/workers/workers.selectors";
+
+import {
+  workersFetchStart,
+  clearWorkers
+} from "../../redux/workers/workers.action";
 
 import WorkerEntry from "../worker-entry/worker-entry.component";
+import Loader from "../loader/loader.component";
 
 import "./workers-collection.style.scss";
 
-const WorkersCollection = ({ currentUser }) => {
-  const uid = currentUser.uid || null;
-  const [workers, setWorkers] = useState([]);
-
+const WorkersCollection = ({ currentUser, workersCollection, dispatch }) => {
   useEffect(() => {
-    let unSubscribeFromFirestore = null;
-    unSubscribeFromFirestore = firestore
-      .collection(`users/${uid}/workers`)
-      .onSnapshot(snapshot => {
-        const workerCollection = snapshot.docs.map(collectedWorkerDetails);
-        setWorkers(workerCollection);
-      });
-
-    return () => {
-      unSubscribeFromFirestore();
-      console.log("unmouted");
-    };
-  }, [uid]);
+    const uid = currentUser.uid;
+    dispatch(workersFetchStart(uid));
+    return () => dispatch(clearWorkers());
+  }, [currentUser.uid, dispatch]);
 
   return (
     <div className="workers-collection">
@@ -41,17 +36,22 @@ const WorkersCollection = ({ currentUser }) => {
           <div className="table__cell-5 table--heading">Start date</div>
           <div className="table__cell-6 table--heading">Salary</div>
         </div>
-        {workers.map(work => (
-          <WorkerEntry key={work.id} work={work} />
-        ))}
+        {workersCollection ? (
+          workersCollection.map(work => (
+            <WorkerEntry key={work.id} work={work} />
+          ))
+        ) : (
+          <Loader loader />
+        )}
       </div>
       <div className="workers-collection__footer"></div>
     </div>
   );
 };
 
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectUserCurrentUser,
+  workersCollection: selectWorkers
 });
 
 export default connect(mapStateToProps)(WorkersCollection);

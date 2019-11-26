@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { auth } from "../../firebase/firebase";
+import { emaiSignInStart } from "../../redux/user/user.actions";
+import { connect } from "react-redux";
 
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
 
 import "./sign-in.styles.scss";
 
-const SignIn = () => {
+const SignIn = ({ dispatch }) => {
   const [signInCredentials, setSignInCredentials] = useState({
     email: "",
     password: ""
@@ -20,7 +21,7 @@ const SignIn = () => {
   const handleSubmit = event => {
     event.preventDefault();
 
-    auth.signInWithEmailAndPassword(email, password);
+    dispatch(emaiSignInStart(email, password));
   };
 
   const { email, password } = signInCredentials;
@@ -51,4 +52,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default connect(null)(SignIn);

@@ -1,16 +1,21 @@
 import React, { useState } from "react";
-import { firestore, auth } from "../../firebase/firebase";
 
 import DatePicker from "react-datepicker";
 import CustomButton from "../custom-button/custom-button.component";
 
+import { connect } from "react-redux";
+
+import { createStructuredSelector } from "reselect";
+
+import { selectUserCurrentUser } from "../../redux/user/user.selector";
+
+import { addWorkerStart } from "../../redux/workers/workers.action";
+
 import "./add-worker-form.styles.scss";
 import "react-datepicker/dist/react-datepicker.css";
 
-const AddWorkerForm = () => {
-  const { uid } = auth.currentUser;
-
-  const [userCredentials, setUserCredentials] = useState({
+const AddWorkerForm = ({ currentUser, dispatch }) => {
+  const [workerCredentials, setWorkerCredentials] = useState({
     firstname: "",
     surname: "",
     email: "",
@@ -23,18 +28,20 @@ const AddWorkerForm = () => {
 
   const handleChange = event => {
     const { name, value } = event.target;
-    setUserCredentials({ ...userCredentials, [name]: value });
+    setWorkerCredentials({ ...workerCredentials, [name]: value });
   };
 
   const handleDate = date => {
-    setUserCredentials({ ...userCredentials, statrtDate: date });
+    setWorkerCredentials({ ...workerCredentials, statrtDate: date });
     console.log(date);
   };
 
   const handleSubmit = event => {
     event.preventDefault();
 
-    setUserCredentials({
+    dispatch(addWorkerStart(workerCredentials, currentUser.uid));
+
+    setWorkerCredentials({
       firstname: "",
       surname: "",
       email: "",
@@ -44,7 +51,6 @@ const AddWorkerForm = () => {
       age: "",
       salary: ""
     });
-    firestore.collection(`users/${uid}/workers`).add(userCredentials);
   };
 
   const {
@@ -56,7 +62,7 @@ const AddWorkerForm = () => {
     statrtDate,
     age,
     salary
-  } = userCredentials;
+  } = workerCredentials;
 
   return (
     <form className="worker-form" onSubmit={handleSubmit}>
@@ -166,4 +172,8 @@ const AddWorkerForm = () => {
   );
 };
 
-export default AddWorkerForm;
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectUserCurrentUser
+});
+
+export default connect(mapStateToProps)(AddWorkerForm);

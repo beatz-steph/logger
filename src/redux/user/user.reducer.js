@@ -20,7 +20,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         currentUser: action.payload,
-        isFetching: false
+        isFetching: false,
+        error: null
       };
 
     case userActionTypes.SIGN_IN_FAILURE:
@@ -31,6 +32,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
         error: action.payload,
         isFetching: false
       };
+
+    case userActionTypes.SIGN_OUT_START:
+      return { ...state, ...INITIAL_STATE };
 
     case userActionTypes.SIGN_OUT_SUCCESS:
       return {

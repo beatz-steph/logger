@@ -12,31 +12,41 @@ import {
   selectUserCurrentUser
 } from "./redux/user/user.selector";
 
+import { auth } from "./firebase/firebase";
+
 import "./app.scss";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 function App({ checkUserSession, currentUser, isFetching }) {
+  const currUse = auth.currentUser;
+
   useEffect(() => {
     checkUserSession();
-  }, []);
+  }, [checkUserSession, currUse]);
 
   return (
     <div>
       <Switch>
         <Route exact path="/">
           {isFetching ? (
-            <Loader loader />
-          ) : null && currentUser ? (
+            <Loader spinner />
+          ) : currentUser ? (
             <Redirect to="/dashboard" />
-          ) : (
+          ) : !currentUser ? (
             <Redirect to="/signin" />
-          )}
+          ) : null}
         </Route>
         <Route path="/dashboard">
-          {!currentUser ? <Redirect to="/signin" /> : <Landing />}
+          {!currentUser ? <Redirect to="/" /> : <Landing />}
         </Route>
         <Route path="/signin">
-          {currentUser ? <Redirect to="/dashboard" /> : <SignInSignUp />}
+          {isFetching && !currentUser ? (
+            <Redirect to="/" />
+          ) : currentUser ? (
+            <Landing />
+          ) : !currentUser ? (
+            <SignInSignUp />
+          ) : null}
         </Route>
       </Switch>
     </div>
